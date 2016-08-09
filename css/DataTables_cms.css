@@ -1,0 +1,5 @@
+
+.dt							{ display:table; width:100%; border-collapse:collapse; }
+.dt-row						{ display:table-row; }
+.dt-col						{ display:table-cell; text-align:center; border:1px solid #999; border-collapse:collapse; }
+
