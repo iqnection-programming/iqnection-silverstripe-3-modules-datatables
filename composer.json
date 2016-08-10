@@ -10,12 +10,9 @@
 		}
 	],
 	"require": {
-<<<<<<< HEAD
 		"silverstripe/framework": ">=3",
 		"iqnection-modules/simplecolorpickerfield" : "*"
-=======
 		"silverstripe/framework": ">=3"
->>>>>>> f028dd8... ## [0.0.1]
 	},
 	"extra": {
 		"installer-name": "iq-datatables"

@@ -25,11 +25,7 @@ class DataTableColumn extends DataObject
 	function getCMSFields()
 	{
 		$fields = parent::getCMSFields();
-<<<<<<< HEAD
 		if ($this->ParentColumn()->Exists())
-=======
-		if ($this->ParentColumnID && $this->ParentColumn()->Exists())
->>>>>>> f028dd8... ## [0.0.1]
 		{
 			$fields->insertBefore( HeaderField::create('parent',$this->ParentColumn()->Content,2), 'Align');
 		}
@@ -37,10 +33,7 @@ class DataTableColumn extends DataObject
 		$fields->push( new HiddenField('DataTableRowID',null,$fields->dataFieldByName('DataTableRowID')->Value()) );
 		$fields->push( new HiddenField('ParentColumnID',null,$fields->dataFieldByName('ParentColumnID')->Value()) );
 		
-<<<<<<< HEAD
 		$fields->replaceField('Align', OptionSetField::create('Align','Text Align',$this->relObject('Align')->enumValues()) );
-=======
->>>>>>> f028dd8... ## [0.0.1]
 		return $fields;
 	}
 
@@ -53,7 +46,6 @@ class DataTableColumn extends DataObject
 	{
 		return ($this->Content) ? $this->relObject('Content')->Summary() : '[ Empty ]';
 	}
-<<<<<<< HEAD
 	
 	public function __get($var)
 	{
@@ -72,6 +64,4 @@ class DataTableColumn extends DataObject
 		}
 		return $this->SortOrder;
 	}
-=======
->>>>>>> f028dd8... ## [0.0.1]
 }
