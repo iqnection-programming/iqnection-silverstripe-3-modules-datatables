@@ -24,7 +24,7 @@ class DataTable extends DataObject
 	{
 		Requirements::css(DATATABLES_DIR."/css/DataTables_cms.css");
 		$fields = parent::getCMSFields();
-		$fields->insertBefore( LiteralField::create('ShortCode','Short Code: <pre>'.$this->GenerateShortCode().'</pre>'), 'Title');
+		$fields->insertBefore( TextField::create('ShortCode','Short Code')->setValue(htmlspecialchars($this->GenerateShortCode()))->setAttribute('readonly','readonly'), 'Title');
 		$fields->removeByName('DataTableRows');
 		$fields->addFieldToTab('Root.Main', $gridField = GridField::create(
 			'DataTableRows',
@@ -37,24 +37,22 @@ class DataTable extends DataObject
 		$gf_config->removeComponentsByType('GridFieldAddNewButton')->addComponent(
 			new GridFieldDataTableAddRowButton()
 		);
-//		$gf_config->getComponentByType('GridFieldDataColumns')->setFieldFormatting(array(
-//			'GridFieldPreview' => function($value,$item){
-//				return htmlspecialchars_decode($value);
-//			}
-//		));
 		// rebuild the columns to show the actual table layout
-		$columns = array();
+		$columns = array('GridFieldRowNumber' => 'Row');
 		for($i=0;$i<$this->ColumnCount();$i++)
 		{
 			$columns['GridFieldColumnPreview'.$i] = 'Column '.($i+1);
 		}
-		$gf_config->getComponentByType('GridFieldDataColumns')->setDisplayFields($columns);
+		$gf_config->getComponentByType('GridFieldDataColumns')
+			->setDisplayFields($columns)
+			->setFieldFormatting(array('GridFieldRowNumber' => function($value,$item){ return '<strong>'.htmlspecialchars_decode($value).'</strong>'; }));
 		
 		
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('Striped') );
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('FirstRowHeader') );
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('ShowBorders') );
-		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('BorderColor')->setRightTitle('(ex. #CCCCCC, rgba(200,200,200,0.5), etc)') );
+		$fields->removeByName('BorderColor');
+		$fields->addFieldToTab('Root.Style', SimpleColorPickerField::create('BorderColor')->setRightTitle('(ex. #CCCCCC, rgba(200,200,200,0.5), etc)') );
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('CellPadding')->setRightTitle('(ex. 10px, 2px 10px, etc.)') );
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('Width')->setRightTitle('(ex. auto, 1000px, 50%, etc.) Default: 100%') );
 		return $fields;
@@ -77,6 +75,7 @@ class DataTable extends DataObject
 	{
 		Requirements::css(DATATABLES_DIR."/css/DataTables.css");
 		Requirements::css(ViewableData::ThemeDir()."/css/DataTables.css");
+		Requirements::javascript(DATATABLES_DIR."/javascript/DataTables.js");
 		Requirements::javascript(ViewableData::ThemeDir()."/javascript/DataTables.js");
 		if ($table = DataTable::get()->byID($args['id'])) return $table->forTemplate();
 	}

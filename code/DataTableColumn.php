@@ -25,7 +25,7 @@ class DataTableColumn extends DataObject
 	function getCMSFields()
 	{
 		$fields = parent::getCMSFields();
-		if ($this->ParentColumnID && $this->ParentColumn()->Exists())
+		if ($this->ParentColumn()->Exists())
 		{
 			$fields->insertBefore( HeaderField::create('parent',$this->ParentColumn()->Content,2), 'Align');
 		}
@@ -33,6 +33,7 @@ class DataTableColumn extends DataObject
 		$fields->push( new HiddenField('DataTableRowID',null,$fields->dataFieldByName('DataTableRowID')->Value()) );
 		$fields->push( new HiddenField('ParentColumnID',null,$fields->dataFieldByName('ParentColumnID')->Value()) );
 		
+		$fields->replaceField('Align', OptionSetField::create('Align','Text Align',$this->relObject('Align')->enumValues()) );
 		return $fields;
 	}
 
@@ -44,5 +45,23 @@ class DataTableColumn extends DataObject
 	public function GridFieldPreview()
 	{
 		return ($this->Content) ? $this->relObject('Content')->Summary() : '[ Empty ]';
+	}
+	
+	public function __get($var)
+	{
+		if ($var == 'Title')
+		{
+			return 'Column '.$this->ColumnNumber();
+		}
+		return parent::__get($var);
+	}
+	
+	public function ColumnNumber()
+	{
+		if ($this->ParentColumn()->Exists())
+		{
+			return $this->ParentColumn()->SortOrder;
+		}
+		return $this->SortOrder;
 	}
 }
