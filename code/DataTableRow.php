@@ -28,7 +28,11 @@ class DataTableRow extends DataObject
 		$fields = parent::getCMSFields();
 		$fields->push( new HiddenField('SortOrder',null,$fields->dataFieldByName('SortOrder')->Value()) );
 		$fields->push( new HiddenField('DataTableID',null,$fields->dataFieldByName('DataTableID')->Value()) );
+<<<<<<< HEAD
 		$fields->addFieldToTab('Root.Main', HeaderField::create('rowNumber',$this->RowNumber(),2) );
+=======
+		
+>>>>>>> f028dd8... ## [0.0.1]
 		$fields->removeByName('DataTableColumns');
 		$fields->addFieldToTab('Root.Main', GridField::create(
 			'DataTableColumns',
@@ -76,6 +80,7 @@ class DataTableRow extends DataObject
 		{
 			return $this->ColumnPreview( preg_replace("/[^0-9]/","",$var) );
 		}
+<<<<<<< HEAD
 		elseif ($var == 'GridFieldRowNumber' || $var == 'Title')
 		{
 			return $this->RowNumber();
@@ -95,6 +100,10 @@ class DataTableRow extends DataObject
 		}
 		return 'Row '.($this->SortOrder);
 	}
+=======
+		return parent::__get($var);
+	}
+>>>>>>> f028dd8... ## [0.0.1]
 	
 	public function ColumnPreview($columnNumber)
 	{
