@@ -7,7 +7,7 @@ class DataTable extends DataObject
 		'ShowBorders' => 'Boolean',
 		'BorderColor' => 'Varchar(30)',
 		'FirstRowHeader' => "Boolean",
-		'CellPadding' => 'Int',
+		'CellPadding' => 'Varchar(30)',
 		'Width' => 'Varchar(20)',
 		'Striped' => 'Boolean'
 	);
@@ -74,9 +74,9 @@ class DataTable extends DataObject
 	public static function ParseShortCode($args, $content=null, $parser=null, $tagname=null)
 	{
 		Requirements::css(DATATABLES_DIR."/css/DataTables.css");
-		Requirements::css(ViewableData::ThemeDir()."/css/DataTables.css");
+		Requirements::css(Controller::curr()->ThemeDir()."/css/DataTables.css");
 		Requirements::javascript(DATATABLES_DIR."/javascript/DataTables.js");
-		Requirements::javascript(ViewableData::ThemeDir()."/javascript/DataTables.js");
+		Requirements::javascript(Controller::curr()->ThemeDir()."/javascript/DataTables.js");
 		if ($table = DataTable::get()->byID($args['id'])) return $table->forTemplate();
 	}
 	
