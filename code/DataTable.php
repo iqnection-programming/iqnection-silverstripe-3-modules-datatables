@@ -24,7 +24,7 @@ class DataTable extends DataObject
 	{
 		Requirements::css(DATATABLES_DIR."/css/DataTables_cms.css");
 		$fields = parent::getCMSFields();
-		$fields->insertBefore( TextField::create('ShortCode','Short Code')->setValue(htmlspecialchars($this->GenerateShortCode()))->setAttribute('readonly','readonly'), 'Title');
+		$fields->insertBefore( TextField::create('ShortCode','Short Code')->setValue($this->GenerateShortCode())->setAttribute('readonly','readonly'), 'Title');
 		$fields->removeByName('DataTableRows');
 		$fields->addFieldToTab('Root.Main', $gridField = GridField::create(
 			'DataTableRows',
@@ -89,13 +89,13 @@ class DataTable extends DataObject
 				// format is XXpx YYpx
 				return $this->CellPadding;
 			}
-			elseif (!preg_match("/[px|\%]/",$this->CellPadding))
+			elseif (preg_match("/[px|\%]/",$this->CellPadding))
 			{
-				// format is XXpx or XX%
-				return $this->CellPadding.'px';
+				// format is either XXpx or XX%
+				return $this->CellPadding;
 			}
 			// no format, just a number
-			return preg_replace("/[^0-9]/","",$this->CellPadding);
+			return preg_replace("/[^0-9]/","",$this->CellPadding).'px';
 		}
 	}
 	
