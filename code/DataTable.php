@@ -26,26 +26,33 @@ class DataTable extends DataObject
 		$fields = parent::getCMSFields();
 		$fields->insertBefore( TextField::create('ShortCode','Short Code')->setValue($this->GenerateShortCode())->setAttribute('readonly','readonly'), 'Title');
 		$fields->removeByName('DataTableRows');
-		$fields->addFieldToTab('Root.Main', $gridField = GridField::create(
-			'DataTableRows',
-			'Rows',
-			$this->DataTableRows(),
-			$gf_config = GridFieldConfig_RecordEditor::create()->addComponent(
-				new GridFieldSortableRows('SortOrder')
-			)
-		));
-		$gf_config->removeComponentsByType('GridFieldAddNewButton')->addComponent(
-			new GridFieldDataTableAddRowButton()
-		);
-		// rebuild the columns to show the actual table layout
-		$columns = array('GridFieldRowNumber' => 'Row');
-		for($i=0;$i<$this->ColumnCount();$i++)
+		if ($this->ID)
 		{
-			$columns['GridFieldColumnPreview'.$i] = 'Column '.($i+1);
+			$fields->addFieldToTab('Root.Main', $gridField = GridField::create(
+				'DataTableRows',
+				'Rows',
+				$this->DataTableRows(),
+				$gf_config = GridFieldConfig_RecordEditor::create()->addComponent(
+					new GridFieldSortableRows('SortOrder')
+				)
+			));
+			$gf_config->removeComponentsByType('GridFieldAddNewButton')->addComponent(
+				new GridFieldDataTableAddRowButton()
+			);
+			// rebuild the columns to show the actual table layout
+			$columns = array('GridFieldRowNumber' => 'Row');
+			for($i=0;$i<$this->ColumnCount();$i++)
+			{
+				$columns['GridFieldColumnPreview'.$i] = 'Column '.($i+1);
+			}
+			$gf_config->getComponentByType('GridFieldDataColumns')
+				->setDisplayFields($columns)
+				->setFieldFormatting(array('GridFieldRowNumber' => function($value,$item){ return '<strong>'.htmlspecialchars_decode($value).'</strong>'; }));
 		}
-		$gf_config->getComponentByType('GridFieldDataColumns')
-			->setDisplayFields($columns)
-			->setFieldFormatting(array('GridFieldRowNumber' => function($value,$item){ return '<strong>'.htmlspecialchars_decode($value).'</strong>'; }));
+		else
+		{
+			$fields->addFieldToTab('Root.Main', HeaderField::create('savefirst','You must save before adding rows',3) );
+		}
 		
 		
 		$fields->addFieldToTab('Root.Style', $fields->dataFieldByName('Striped') );
@@ -101,7 +108,7 @@ class DataTable extends DataObject
 	
 	public function ColumnCount()
 	{
-		if ($this->FirstRowHeader)
+		if ( ($this->FirstRowHeader) && ($this->HeaderRow()) )
 		{
 			return $this->HeaderRow()->DataTableColumns()->Count();
 		}

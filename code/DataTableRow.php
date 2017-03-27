@@ -30,21 +30,28 @@ class DataTableRow extends DataObject
 		$fields->push( new HiddenField('DataTableID',null,$fields->dataFieldByName('DataTableID')->Value()) );
 		$fields->addFieldToTab('Root.Main', HeaderField::create('rowNumber',$this->RowNumber(),2) );
 		$fields->removeByName('DataTableColumns');
-		$fields->addFieldToTab('Root.Main', GridField::create(
-			'DataTableColumns',
-			'Columns',
-			$this->DataTableColumns(),
-			$gf_config = GridFieldConfig_RecordEditor::create()
-		));
-		if ($this->DataTable()->HeaderRow()->ID == $this->ID)
+		if ($this->ID)
 		{
-			$gf_config->addComponent(
-				new GridFieldSortableRows('SortOrder')
+			$fields->addFieldToTab('Root.Main', GridField::create(
+				'DataTableColumns',
+				'Columns',
+				$this->DataTableColumns(),
+				$gf_config = GridFieldConfig_RecordEditor::create()
+			));
+			if ($this->DataTable()->HeaderRow()->ID == $this->ID)
+			{
+				$gf_config->addComponent(
+					new GridFieldSortableRows('SortOrder')
+				);
+			}
+			$gf_config->removeComponentsByType('GridFieldAddNewButton')->addComponent(
+				new GridFieldDataTableAddColumnButton()
 			);
 		}
-		$gf_config->removeComponentsByType('GridFieldAddNewButton')->addComponent(
-			new GridFieldDataTableAddColumnButton()
-		);
+		else
+		{
+			$fields->addFieldToTab('Root.Main', HeaderField::create('savefirst','You must save before adding columns',3) );
+		}
 		return $fields;
 	}
 
