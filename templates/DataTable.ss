@@ -9,6 +9,8 @@
 	#data-table-{$ID} th,
 	#data-table-{$ID} td				{ padding:$CssPadding; }
 <% end_if %>
+	#data-table-{$ID} td[align="center"] { text-align:center; }
+	#data-table-{$ID} td[align="right"] { text-align:right; }
 </style>
 
 <div class="data-table-wrap" id="data-table-{$ID}">
